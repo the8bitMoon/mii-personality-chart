@@ -1,0 +1,166 @@
+/* src/colors.css */
+
+:root {
+	/* Background of accented user interface controls (e.g., default buttons, checkboxes) */
+	--color-accent-color: AccentColor;
+
+	/* Text of accented user interface controls */
+	--color-accent-color-text: AccentColorText;
+
+	/* Text of active links (links being clicked/activated) */
+	--color-active-text: ActiveText;
+
+	/* Base border color of controls */
+	--color-button-border: ButtonBorder;
+
+	/* Background color of controls (buttons, dropdowns, etc.) */
+	--color-button-face: ButtonFace;
+
+	/* Text color of controls */
+	--color-button-text: ButtonText;
+
+	/* Background of application content or documents (main page background) */
+	--color-canvas: Canvas;
+
+	/* Text color in application content or documents (main text color) */
+	--color-canvas-text: CanvasText;
+
+	/* Background of input fields */
+	--color-field: Field;
+
+	/* Text in input fields */
+	--color-field-text: FieldText;
+
+	/* Text color for disabled items (e.g., a disabled control) */
+	--color-gray-text: GrayText;
+
+	/* Background of selected/highlighted items (e.g., text selection) */
+	--color-highlight: Highlight;
+
+	/* Text color of selected/highlighted items */
+	--color-highlight-text: HighlightText;
+
+	/* Text of non-active, non-visited links */
+	--color-link-text: LinkText;
+
+	/* Background of text that has been specially marked (e.g., HTML <mark> element) */
+	--color-mark: Mark;
+
+	/* Text that has been specially marked */
+	--color-mark-text: MarkText;
+
+	/* Background of selected items (e.g., a selected checkbox or radio button) */
+	--color-selected-item: SelectedItem;
+
+	/* Text of selected items */
+	--color-selected-item-text: SelectedItemText;
+
+	/* Text of visited links */
+	--color-visited-text: VisitedText;
+}
+
+/* Apply system colors to base elements */
+body {
+	background-color: var(--color-canvas);
+	color: var(--color-canvas-text);
+}
+
+/* Links */
+a:link {
+	color: var(--color-link-text);
+}
+
+a:visited {
+	color: var(--color-visited-text);
+}
+
+a:active {
+	color: var(--color-active-text);
+}
+
+/* Buttons and form controls */
+button,
+select,
+input[type='submit'],
+input[type='reset'],
+input[type='button'] {
+	background-color: var(--color-button-face);
+	color: var(--color-button-text);
+	border: 1px solid var(--color-button-border);
+}
+
+/* Accent-style buttons (primary actions) */
+button.primary,
+input[type='submit'] {
+	background-color: var(--color-accent-color);
+	color: var(--color-accent-color-text);
+	border-color: var(--color-accent-color);
+}
+
+/* Interactive state */
+button:hover {
+	background-color: var(--color-selected-item);
+	color: var(--color-selected-item-text);
+}
+button:active {
+	background-color: var(--color-selected-item-text);
+	color: var(--color-selected-item);
+}
+
+/* Disabled controls */
+button:disabled,
+input:disabled,
+select:disabled,
+textarea:disabled {
+	color: var(--color-gray-text);
+}
+
+/* Input fields */
+input,
+textarea {
+	background-color: var(--color-field);
+	color: var(--color-field-text);
+	border: 1px solid var(--color-button-border);
+}
+
+/* Text selection */
+::selection {
+	background-color: var(--color-highlight);
+	color: var(--color-highlight-text);
+}
+
+/* Marked/highlighted text */
+mark {
+	background-color: var(--color-mark);
+	color: var(--color-mark-text);
+}
+
+/* Selected form items (checkboxes, radio buttons) */
+input[type='checkbox']:checked,
+input[type='radio']:checked {
+	accent-color: var(--color-selected-item);
+}
+
+/* Selected options in dropdowns */
+option:checked {
+	background-color: var(--color-selected-item);
+	color: var(--color-selected-item-text);
+}
+
+/* Forced colors mode adjustments */
+@media (forced-colors: active) {
+	/* Ensure borders are visible when box-shadows are forced to none */
+	button:focus,
+	input:focus,
+	select:focus,
+	textarea:focus {
+		outline: 2px solid var(--color-button-border);
+		outline-offset: 2px;
+	}
+
+	/* Ensure custom styled elements respect system colors */
+	.card,
+	.panel {
+		border: 1px solid var(--color-button-border);
+	}
+}

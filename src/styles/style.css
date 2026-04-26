@@ -1,0 +1,192 @@
+/* src/styles/style.css */
+
+@import url('reset.css');
+@import url('colors.css');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
+
+:root {
+	/* color-scheme: light dark; */
+
+	--spacer-lg: 1rem;
+	--spacer-md: 1rch;
+	--spacer-sm: 0.5rch;
+
+	/* Tomodachi Life Colors */
+	--color-canvas: #ffc100;
+	--color-canvas-text: #333;
+	--color-surface: #fef2ca;
+	--color-accent: #fd5700;
+
+	--color-considerate: #e29900;
+	--color-sweetie: #ffdfa2;
+	--color-cheerleader: #fff03f;
+	--color-buddy: #fed74b;
+	--color-daydreamer: #ffc26f;
+
+	--color-outgoing: #f86543;
+	--color-charmer: #fe9dbe;
+	--color-gogetter: #fa565f;
+	--color-merrymaker: #ff8b79;
+	--color-dynamo: #fa7942;
+
+	--color-reserved: #489e71;
+	--color-strategist: #9ddc5a;
+	--color-perfectionist: #00cda3;
+	--color-observer: #419595;
+	--color-thinker: #24ae61;
+
+	--color-ambitious: #608ad4;
+	--color-achiever: #78def4;
+	--color-visionary: #3fa4f6;
+	--color-rogue: #6e7af4;
+	--color-maverick: #a382f7;
+
+	--color-0: #73d192;
+	--color-1: #8be3a6;
+	--color-2: #a9edbc;
+	--color-3: #c2edcf;
+	--color-4: #ffcd98;
+	--color-5: #febe76;
+	--color-6: #fcaf55;
+	--color-7: #ffa238;
+
+	font-size: clamp(16px, calc(24 / 1920 * 100vw), 32px);
+}
+
+html {
+	font-family: 'Nunito', sans-serif;
+	font-weight: 700;
+	max-height: 100dvh;
+	max-width: 100dvw;
+
+	padding: var(--spacer-lg);
+}
+
+body {
+	height: 100%;
+	width: 100%;
+	max-width: 60ch;
+	margin: auto;
+	display: flex;
+	flex-direction: column;
+	gap: var(--spacer-lg);
+}
+
+main {
+	display: flex;
+	flex-direction: column;
+	gap: var(--spacer-lg);
+}
+
+aside, details,
+.radio-grid,
+.personality-grid {
+	background: var(--color-surface);
+	padding: var(--spacer-lg);
+	border-radius: var(--spacer-lg);
+}
+
+aside {
+	font-size: smaller;
+	font-style: italic;
+}
+
+details {
+	font-size: smaller;
+}
+
+h2 {
+	margin-block-start: var(--spacer-md);
+}
+
+h3 {
+	font-size: 1em;
+}
+
+code {
+	font: inherit;
+	color: var(--color-accent);
+}
+
+button,
+input {
+	cursor: pointer;
+}
+
+.radio-grid {
+	display: grid;
+	grid-template-columns: repeat(9, auto);
+	/* grid-template-rows: repeat(4, auto); */
+	grid-auto-flow: row;
+	place-content: center;
+	place-items: baseline start;
+	gap: var(--spacer-sm);
+}
+
+.radio-row {
+	display: contents;
+
+	p {
+		display: none;
+	}
+
+	h3 {
+		margin-inline-end: var(--spacer-md);
+	}
+
+	.left-label {
+		justify-self: end;
+	}
+}
+
+.radio-check {
+	place-self: center;
+	appearance: none;
+	display: inline flex;
+	place-content: center;
+	place-items: center;
+	height: 1em;
+	width: 1em;
+	border-radius: var(--spacer-sm);
+	border: none;
+	color: white;
+	transition:
+		transform 100ms ease,
+		background-color 100ms ease;
+
+	&:checked {
+		background-color: var(--color-accent) !important;
+		transform: scale(120%);
+		&::after {
+			content: '✓';
+			line-height: 1;
+		}
+	}
+}
+
+.personality-grid {
+	display: grid;
+	grid-template-columns:  repeat(4, 1fr);
+	grid-template-rows: repeat(4, auto);
+	gap: var(--spacer-sm);
+
+	button {
+		border: none;
+		border-radius: var(--spacer-sm);
+		transition:
+			transform 100ms ease,
+			outline-width 100ms ease;
+		outline-color: var(--color-accent);
+		outline-width: 0;
+		outline-style: solid;
+		text-wrap: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		/* font-size: clamp(8px, calc(16 / 1920 * 100vw), 1rem); */
+		&[data-selected-personality='true'] {
+			outline-width: var(--spacer-sm);
+			transform: scale(110%);
+			z-index: 10;
+		}
+	}
+}
