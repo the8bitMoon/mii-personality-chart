@@ -2,19 +2,34 @@
 
 import van from 'vanjs-core';
 
-const personalities = [
-	['Observer', 'Strategist', 'Buddy', 'Sweetie'], // Considerate
-	['Thinker', 'Perfectionist', 'Daydreamer', 'Cheerleader'], // Reserved
-	['Rogue', 'Achiever', 'Merrymaker', 'Charmer'], // Ambitious
-	['Maverick', 'Visionary', 'Dynamo', 'Go-Getter'], // Outgoing
+const personalityClasses = [
+	['observer', 'strategist', 'buddy', 'sweetie'], // Col 1
+	['thinker', 'perfectionist', 'daydreamer', 'cheerleader'], // Col 2
+	['rogue', 'achiever', 'merrymaker', 'charmer'], // Col 3
+	['maverick', 'visionary', 'dynamo', 'gogetter'], // Col 4
 ];
 
-// Set up state.
+const personalitiesUS = [
+	['Observer', 'Strategist', 'Buddy', 'Sweetie'], // Col 1
+	['Thinker', 'Perfectionist', 'Daydreamer', 'Cheerleader'], // Col 2
+	['Rogue', 'Achiever', 'Merrymaker', 'Charmer'], // Col 3
+	['Maverick', 'Visionary', 'Dynamo', 'Go-Getter'], // Col 4
+];
+
+const personalitiesUK = [
+	['Introvert', 'Patient', 'Carer', 'Softie'], // Col 1
+	['Thinker', 'Perfectionist', 'Dreamer', 'Optimist'], // Col 2
+	['Individualist', 'Busy Bee', 'Bubbly', 'Charmer'], // Col 3
+	['Headstrong', 'Leader', 'Hot-Blooded', 'Adventurer'], // Col 4
+];
+
+// Set up state for UI elements.
 const movement = van.state(-1),
 	speech = van.state(-1),
 	energy = van.state(-1),
 	thinking = van.state(-1),
-	overall = van.state(-1);
+	overall = van.state(-1),
+	regionUS = van.state(true);
 
 // Derived sums for actual personality score.
 const ms = van.derive(() => movement.val + speech.val),
@@ -22,12 +37,18 @@ const ms = van.derive(() => movement.val + speech.val),
 	msTier = van.derive(() => Math.floor(ms.val / 4)),
 	etTier = van.derive(() => Math.floor(et.val / 4));
 
+// Derive localized personality strings.
+const personalities = van.derive(() =>
+	regionUS.val ? personalitiesUS : personalitiesUK,
+);
+
 const {
 	header,
 	main,
 	footer,
 	section,
 	div,
+	span,
 	input,
 	button,
 	label,
@@ -72,9 +93,9 @@ const RadioRow = (labelText, lowText, highText, state) => {
 const PersonalityGrid = () => {
 	return section(
 		{ class: 'personality-grid' },
-		personalities
+		personalityClasses
 			.map((category, col) => {
-				return category.map((personality, row) => {
+				return category.map((personalityClass, row) => {
 					return button(
 						{
 							onclick: (e) => {
@@ -94,13 +115,28 @@ const PersonalityGrid = () => {
 							},
 							'data-selected-personality': () =>
 								msTier.val === col && etTier.val === row,
-							style: `grid-column: ${col + 1}; grid-row: ${4 - row}; background: var(--color-${personality.toLocaleLowerCase().replace('-', '')})`,
+							style: `grid-column: ${col + 1}; grid-row: ${4 - row}; background: var(--color-${personalityClass}`,
 						},
-						personality,
+						() => personalities.val[col][row],
 					);
 				});
 			})
 			.flat(2),
+		div(
+			{ class: 'region-select' },
+			p('Region Select:'),
+			span({ class: () => `indicator ${regionUS.val}` }, 'US'),
+			input({
+				type: 'checkbox',
+				checked: () => regionUS.val,
+				oninput: (e) => {
+					regionUS.val = e.target.checked;
+					console.debug(regionUS.val);
+					console.debug(personalities.val);
+				},
+			}),
+			span({ class: () => `indicator ${!regionUS.val}` }, 'UK'),
+		),
 	);
 };
 
