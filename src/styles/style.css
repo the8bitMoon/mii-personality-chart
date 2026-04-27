@@ -2,7 +2,7 @@
 
 @import url('reset.css');
 @import url('colors.css');
-@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
 
 :root {
 	/* color-scheme: light dark; */
@@ -13,9 +13,14 @@
 
 	/* Tomodachi Life Colors */
 	--color-canvas: #ffc100;
-	--color-canvas-text: #333;
+	--color-canvas-text: #332;
 	--color-surface: #fef2ca;
 	--color-accent: #fd5700;
+	--color-button-text: inherit;
+	--color-active-text: var(--color-surface);
+	--color-selected-item: var(--color-accent);
+	--color-selected-item-text: var(--color-surface);
+	--color-highlight: var(--color-accent);
 
 	--color-considerate: #e29900;
 	--color-sweetie: #ffdfa2;
@@ -96,7 +101,12 @@ details {
 	font-size: smaller;
 }
 
+h1 {
+	font-size: 1.5rem;
+}
+
 h2 {
+	font-size: 1rem;
 	margin-block-start: var(--spacer-md);
 }
 
@@ -150,7 +160,7 @@ input {
 	width: 1em;
 	border-radius: var(--spacer-sm);
 	border: none;
-	color: white;
+	color: var(--color-surface);
 	transition:
 		transform 100ms ease,
 		background-color 100ms ease;
@@ -169,7 +179,7 @@ input {
 	display: grid;
 	grid-template-columns: repeat(4, 1fr);
 	grid-template-rows: repeat(4, auto);
-	gap: var(--spacer-sm);
+	gap: var(--spacer-md);
 
 	button {
 		border: none;
@@ -200,30 +210,11 @@ input {
 	place-items: center;
 	place-content: center;
 
-	input {
-		appearance: none;
-		color: inherit;
-		border: none;
-		font-size: 2em;
-		line-height: 0;
-		height: 2rem;
-		width: 2rem;
-		background: var(--color-canvas);
+	button {
+		background: none;
 		display: flex;
 		place-items: center;
 		place-content: center;
-		border-radius: 1rem;
-
-		&::before {
-			content: '↔';
-			font: inherit;
-			border: none;
-			margin-bottom: var(--spacer-sm);
-		}
-
-		&:hover {
-			color: white;
-		}
 	}
 
 	.indicator {
@@ -239,4 +230,11 @@ input {
 		color: var(--color-surface);
 		transform: scale(110%);
 	}
+}
+
+.emoji {
+	font-size: 1.5em;
+	line-height: 1;
+	padding: 0.5rem;
+	font-family: 'Noto Color Emoji', sans-serif;
 }

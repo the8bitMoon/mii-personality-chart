@@ -114,7 +114,12 @@ const PersonalityGrid = () => {
 								);
 							},
 							'data-selected-personality': () =>
-								msTier.val === col && etTier.val === row,
+								msTier.val === col &&
+								etTier.val === row &&
+								movement.val >= 0 &&
+								speech.val >= 0 &&
+								energy.val >= 0 &&
+								thinking.val >= 0,
 							style: `grid-column: ${col + 1}; grid-row: ${4 - row}; background: var(--color-${personalityClass}`,
 						},
 						() => personalities.val[col][row],
@@ -125,17 +130,20 @@ const PersonalityGrid = () => {
 		div(
 			{ class: 'region-select' },
 			p('Region Select:'),
-			span({ class: () => `indicator ${regionUS.val}` }, 'US'),
-			input({
-				type: 'checkbox',
-				checked: () => regionUS.val,
-				oninput: (e) => {
-					regionUS.val = e.target.checked;
-					console.debug(regionUS.val);
-					console.debug(personalities.val);
+			button(
+				{
+					class: () => `indicator emoji ${regionUS.val}`,
+					onclick: () => (regionUS.val = true),
 				},
-			}),
-			span({ class: () => `indicator ${!regionUS.val}` }, 'UK'),
+				'🇺🇸',
+			),
+			button(
+				{
+					class: () => `indicator emoji ${!regionUS.val}`,
+					onclick: () => (regionUS.val = false),
+				},
+				'🇬🇧',
+			),
 		),
 	);
 };
