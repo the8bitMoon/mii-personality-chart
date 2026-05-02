@@ -23,19 +23,23 @@ const personalitiesUK = [
 	['Headstrong', 'Leader', 'Hot-Blooded', 'Adventurer'], // Col 4
 ];
 
+// Get initial URL parameters.
+const params = new URLSearchParams(location.search);
+const pageUrl = new URL(location.href);
+
 // Set up state for UI elements.
-const movement = van.state(-1),
-	speech = van.state(-1),
-	energy = van.state(-1),
-	thinking = van.state(-1),
-	overall = van.state(-1),
+const movement = van.state(getNumParam('movement')),
+	speech = van.state(getNumParam('speech')),
+	energy = van.state(getNumParam('energy')),
+	thinking = van.state(getNumParam('thinking')),
+	overall = van.state(getNumParam('overall')),
 	regionUS = van.state(true);
 
 // Derived sums for actual personality score.
 const ms = van.derive(() => movement.val + speech.val),
 	et = van.derive(() => energy.val + thinking.val),
-	msTier = van.derive(() => Math.floor(ms.val / 4)),
-	etTier = van.derive(() => Math.floor(et.val / 4));
+	msTier = van.derive(() => Math.floor((ms.val + 1) / 4)),
+	etTier = van.derive(() => Math.floor((et.val + 1) / 4));
 
 // Derive localized personality strings.
 const personalities = van.derive(() =>
@@ -66,7 +70,7 @@ const {
 	a,
 } = van.tags;
 
-const RadioRow = (labelText, lowText, highText, state) => {
+const RadioRow = (labelText, lowText, highText, state, urlParam) => {
 	let buttons = [];
 	for (let i = 0; i < 8; i++) {
 		buttons.push(
@@ -77,7 +81,7 @@ const RadioRow = (labelText, lowText, highText, state) => {
 				value: i,
 				style: `background-color: var(--color-${i})`,
 				checked: () => state.val === i,
-				onchange: () => (state.val = i),
+				onchange: () => updatePersonalityVal(state, urlParam, i),
 			}),
 		);
 	}
@@ -99,19 +103,19 @@ const PersonalityGrid = () => {
 					return button(
 						{
 							onclick: (e) => {
-								const lowerRowBound = row * 4,
+								const lowerRowBound = row * 4 - 1,
 									upperRowBound = Math.min(lowerRowBound + 3, 14),
-									lowerColBound = col * 4,
+									lowerColBound = col * 4 - 1,
 									upperColBound = Math.min(lowerColBound + 3, 14);
 								let sumMS, m, s;
-								[movement.val, speech.val] = randomPair(
-									lowerColBound,
-									upperColBound,
-								);
-								[energy.val, thinking.val] = randomPair(
-									lowerRowBound,
-									upperRowBound,
-								);
+								const valueSet = [
+									...randomPair(lowerColBound, upperColBound),
+									...randomPair(lowerRowBound, upperRowBound),
+								];
+								updatePersonalityVal(movement, 'movement', valueSet[0]);
+								updatePersonalityVal(speech, 'speech', valueSet[1]);
+								updatePersonalityVal(energy, 'energy', valueSet[2]);
+								updatePersonalityVal(thinking, 'thinking', valueSet[3]);
 							},
 							'data-selected-personality': () =>
 								msTier.val === col &&
@@ -185,10 +189,11 @@ const App = () => {
 		main(
 			section(
 				{ class: 'radio-grid' },
-				RadioRow('Movement', 'Slow', 'Quick', movement),
-				RadioRow('Speech', 'Polite', 'Honest', speech),
-				RadioRow('Energy', 'Flat', 'Varied', energy),
-				RadioRow('Thinking', 'Serious', 'Chill', thinking),
+				RadioRow('Movement', 'Slow', 'Quick', movement, 'movement'),
+				RadioRow('Speech', 'Polite', 'Honest', speech, 'speech'),
+				RadioRow('Energy', 'Flat', 'Varied', energy, 'energy'),
+				RadioRow('Thinking', 'Serious', 'Chill', thinking, 'thinking'),
+				RadioRow('Overall', 'Normal', 'Quirky', overall, 'overall'),
 			),
 			aside(code('Overall'), " doesn't affect personality type."),
 			PersonalityGrid(),
@@ -221,4 +226,14 @@ function randomPair(lower, upper) {
 		sum = x + y;
 	} while (sum < lower || sum > upper);
 	return [x, y];
+}
+function getNumParam(key) {
+	const val = params.get(key);
+	return val ? parseInt(val) : null;
+}
+
+function updatePersonalityVal(state, key, value) {
+	state.val = value;
+	pageUrl.searchParams.set(key, value);
+	history.pushState({}, '', pageUrl);
 }
