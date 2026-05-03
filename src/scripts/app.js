@@ -257,7 +257,7 @@ function randomPair(lower, upper) {
 		x = Math.floor(Math.random() * 8);
 		y = Math.floor(Math.random() * 8);
 		sum = x + y;
-	} while (sum < lower || sum > upper);
+	} while (sum < lower || sum > upper || y === 4);
 	return [x, y];
 }
 function getNumParam(key) {
