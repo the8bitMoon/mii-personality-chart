@@ -2,7 +2,7 @@
 
 @import url('reset.css');
 @import url('colors.css');
-@import url('https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Noto+Color+Emoji&display=swap');
 
 :root {
 	/* color-scheme: light dark; */
@@ -59,8 +59,8 @@
 }
 
 html {
-	font-family: 'Nunito', sans-serif;
-	font-weight: 700;
+	font-family: 'Fredoka', sans-serif;
+	font-weight: 500;
 	max-height: 100dvh;
 	max-width: 100dvw;
 
@@ -161,16 +161,18 @@ input {
 	border-radius: var(--spacer-sm);
 	border: none;
 	color: var(--color-surface);
-	transition:
-		transform 100ms ease,
-		background-color 100ms ease;
+	outline-offset: -1px;
+	transition: all 100ms ease;
 
 	&:checked {
+		box-sizing: padding-box;
 		background-color: var(--color-accent) !important;
 		transform: scale(120%);
+		outline: 3px solid var(--color-accent);
 		&::after {
 			content: '✓';
 			line-height: 1;
+			font-weight: 900;
 		}
 	}
 }

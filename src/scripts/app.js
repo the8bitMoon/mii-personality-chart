@@ -23,6 +23,10 @@ const personalitiesUK = [
 	['Headstrong', 'Leader', 'Hot-Blooded', 'Adventurer'], // Col 4
 ];
 
+// Set slider ladders. The game uses two different ramps to allow for totals between 0-15.
+const lowRamp = [0, 1, 2, 3, 4, 5, 6, 7], // Movement & Energy
+	highRamp = [0, 1, 2, 3, 5, 6, 7, 8]; // Speech and Thinking (Attitude)
+
 // Get initial URL parameters.
 const params = new URLSearchParams(location.search);
 const pageUrl = new URL(location.href);
@@ -38,8 +42,8 @@ const movement = van.state(getNumParam('movement')),
 // Derived sums for actual personality score.
 const ms = van.derive(() => movement.val + speech.val),
 	et = van.derive(() => energy.val + thinking.val),
-	msTier = van.derive(() => Math.floor((ms.val + 1) / 4)),
-	etTier = van.derive(() => Math.floor((et.val + 1) / 4));
+	msTier = van.derive(() => Math.floor(ms.val / 4)),
+	etTier = van.derive(() => Math.floor(et.val / 4));
 
 // Derive localized personality strings.
 const personalities = van.derive(() =>
@@ -69,6 +73,29 @@ const {
 	small,
 	a,
 } = van.tags;
+
+const RadioRowNew = (
+	labelText,
+	lowText,
+	highText,
+	state,
+	urlParam,
+	ramp = lowRamp,
+) => {
+	let buttons = ramp.map((value, index) =>
+		input({
+			name: labelText,
+			type: 'radio',
+			class: 'radio-check',
+			value,
+			style: `background-color: var(--color-${index})`,
+			checked: () => state.val === value,
+			onchange: () => updatePersonalityVal(state, urlParam, value),
+		}),
+	);
+
+	return div({ class: 'radio-row' }, h3(labelText), ...buttons);
+};
 
 const RadioRow = (labelText, lowText, highText, state, urlParam) => {
 	let buttons = [];
@@ -103,11 +130,10 @@ const PersonalityGrid = () => {
 					return button(
 						{
 							onclick: (e) => {
-								const lowerRowBound = row * 4 - 1,
-									upperRowBound = Math.min(lowerRowBound + 3, 14),
-									lowerColBound = col * 4 - 1,
-									upperColBound = Math.min(lowerColBound + 3, 14);
-								let sumMS, m, s;
+								const lowerRowBound = row * 4,
+									upperRowBound = lowerRowBound + 3,
+									lowerColBound = col * 4,
+									upperColBound = lowerColBound + 3;
 								const valueSet = [
 									...randomPair(lowerColBound, upperColBound),
 									...randomPair(lowerRowBound, upperRowBound),
@@ -189,11 +215,18 @@ const App = () => {
 		main(
 			section(
 				{ class: 'radio-grid' },
-				RadioRow('Movement', 'Slow', 'Quick', movement, 'movement'),
-				RadioRow('Speech', 'Polite', 'Honest', speech, 'speech'),
-				RadioRow('Energy', 'Flat', 'Varied', energy, 'energy'),
-				RadioRow('Thinking', 'Serious', 'Chill', thinking, 'thinking'),
-				RadioRow('Overall', 'Normal', 'Quirky', overall, 'overall'),
+				RadioRowNew('Movement', 'Slow', 'Quick', movement, 'movement'),
+				RadioRowNew('Speech', 'Polite', 'Honest', speech, 'speech', highRamp),
+				RadioRowNew('Energy', 'Flat', 'Varied', energy, 'energy'),
+				RadioRowNew(
+					'Thinking',
+					'Serious',
+					'Chill',
+					thinking,
+					'thinking',
+					highRamp,
+				),
+				RadioRowNew('Overall', 'Normal', 'Quirky', overall, 'overall'),
 			),
 			aside(code('Overall'), " doesn't affect personality type."),
 			PersonalityGrid(),
